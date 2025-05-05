@@ -1,2 +1,4 @@
 .env
-src/config.py
+src/backend/config.py
+info.db
+src/backend/__pycache__

@@ -1,5 +1,18 @@
 #!/bin/bash
 
+while getopts "d" flag
+do
+    case "${flag}" in
+        d) dry=1;
+    esac
+done
+
+set -e
+
+if [ $dry ]; then
+	python3 src/backend/app.py
+	exit 
+fi
 
 docker stop site
 docker container rm site
