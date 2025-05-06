@@ -1,5 +1,5 @@
 from graphene import ObjectType, Schema, List
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, HTTPException, Request
 import lib
 import classes
 
@@ -26,7 +26,7 @@ async def query(request: Request):
     query = request.query_params.get("query", None)
 
     if not query:
-        return {"message": "nope"}
+        raise HTTPException(status_code=400, detail="query is not given")
 
     return schema.execute(query).data
 
@@ -34,3 +34,4 @@ async def query(request: Request):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8080)
+

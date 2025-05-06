@@ -6,7 +6,7 @@ from typing import Any
 sources = ["brent_crude_oil"]
 
 
-def exec_query(query: str) -> list[tuple] | None:
+def exec_query(query: str) -> list[tuple] | list:
     with sqlite3.connect(config.DB_NAME) as connection:
         cursor = connection.cursor()
         cursor.execute(query)
