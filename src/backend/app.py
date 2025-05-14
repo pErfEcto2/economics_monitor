@@ -5,7 +5,7 @@ import classes
 
 
 class Query(ObjectType):
-    get_brent_crude_oil = List(classes.BrentCrudeOil)
+    get_brent_crude_oil = List(classes.EconomicIndicator)
 
     def resolve_get_brent_crude_oil(self, info):
         res = lib.exec_query("select * from brent_crude_oil")

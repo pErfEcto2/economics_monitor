@@ -10,6 +10,7 @@ done
 set -e
 
 if [ $dry ]; then
+	python3 src/backend/init_db.py
 	python3 src/backend/app.py
 	exit 
 fi

@@ -1,7 +1,7 @@
-from graphene import ObjectType, Int, String
+from graphene import ObjectType, Float, String
 
-class BrentCrudeOil(ObjectType):
+class EconomicIndicator(ObjectType):
     timestamp = String()
-    value = Int()
+    value = Float()
     units = String()
 
