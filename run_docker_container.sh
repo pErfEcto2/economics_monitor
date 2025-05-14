@@ -15,9 +15,9 @@ if [ $dry ]; then
 	exit 
 fi
 
-docker stop site
-docker container rm site
-docker image rm economics_monitor
+docker stop site || true
+docker container rm site || true
+docker image rm economics_monitor || true
 
 docker build -t economics_monitor .
 docker run --name site -p 8080:8080 economics_monitor

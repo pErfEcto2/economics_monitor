@@ -1,6 +1,9 @@
 import sqlite3
 import config
 from typing import Any
+import requests
+from bs4 import BeautifulSoup
+from datetime import timezone, datetime
 
 
 sources = ["brent_crude_oil"]
@@ -29,6 +32,14 @@ def query_res_to_dict(query_res: list[tuple] | None, keys: list[str]) -> list[di
     
     return res
 
+def get_brent_crude_oil() -> tuple | None:
+    try:
+        soup = BeautifulSoup(requests.get("https://markets.businessinsider.com/commodities/oil-price").content, "html5lib")
+        price = float(soup.find_all("span", attrs={"class": "price-section__current-value"})[0].text)
+        t = datetime.now(timezone.utc)
 
-
+    except Exception:
+        return
+    
+    return (f"{t.year}-{str(t.month).zfill(2)}-{str(t.day).zfill(2)} {str(t.hour).zfill(2)}:{str(t.minute).zfill(2)}:{str(t.second).zfill(2)}", price, "USD")
 
