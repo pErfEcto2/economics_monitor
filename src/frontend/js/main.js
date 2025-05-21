@@ -1,23 +1,18 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Register the necessary plugins
     Chart.register(ChartZoom);
     
-    // Economic sectors and their indicators
     const sectors = {
         'Energy': {
             indicators: [
                 { name: 'Brent Crude Oil', query: 'getBrentCrudeOil' },
-                // Add more indicators here as needed
             ],
             color: '#3498db',
-            charts: [] // This will store chart instances for the sector
+            charts: []
         },
-        // Add more sectors as needed
     };
 
     const sectorsContainer = document.getElementById('sectors-container');
 
-    // Create sector elements
     for (const [sectorName, sectorData] of Object.entries(sectors)) {
         const sectorElement = document.createElement('div');
         sectorElement.className = 'sector';
@@ -34,21 +29,17 @@ document.addEventListener('DOMContentLoaded', function() {
         sectorElement.appendChild(sectorContent);
         sectorsContainer.appendChild(sectorElement);
 
-        // Create chart containers for each indicator in the sector
         sectorData.indicators.forEach(indicator => {
             createChartContainer(sectorContent, indicator);
         });
 
-        // Handle sector toggle
         sectorHeader.addEventListener('click', async function() {
             const isOpening = !sectorContent.classList.contains('active');
             sectorContent.classList.toggle('active');
             
             if (isOpening && sectorData.charts.length === 0) {
-                // Load data and create charts when sector is opened for the first time
                 await loadSectorData(sectorData);
             } else if (isOpening) {
-                // Reset zoom to show last 7 days if sector is reopened
                 resetChartsToLastWeek(sectorData.charts);
             }
         });
@@ -68,17 +59,14 @@ document.addEventListener('DOMContentLoaded', function() {
         chartContainer.appendChild(canvas);
         container.appendChild(chartContainer);
 
-        // Store canvas element for later use
         indicator.canvas = canvas;
     }
 
     async function loadSectorData(sectorData) {
-        // Calculate default date range (last 30 days to have some buffer)
         const endDate = new Date();
         const startDate = new Date();
         startDate.setDate(endDate.getDate() - 30);
 
-        // Load data for all indicators in parallel
         const loadingPromises = sectorData.indicators.map(indicator => {
             return fetchIndicatorData(indicator.query, startDate, endDate)
                 .then(data => {
@@ -94,7 +82,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         await Promise.all(loadingPromises);
-        // After all charts are created, zoom to show last 7 days
         resetChartsToLastWeek(sectorData.charts);
     }
 
@@ -113,7 +100,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function fetchIndicatorData(indicatorName, startDate, endDate) {
-        // Format dates for GraphQL query
         const formatDate = (date) => {
             return date.toISOString().replace('T', ' ').replace(/\.\d+Z/, '');
         };
@@ -138,7 +124,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function createChart(canvas, title, data) {
-        // Sort data by timestamp
         data.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 
         const timestamps = data.map(item => new Date(item.timestamp));
@@ -151,7 +136,6 @@ document.addEventListener('DOMContentLoaded', function() {
             type: 'line',
             data: {
                 datasets: [{
-                    label: `${title} (${units})`,
                     data: values.map((value, index) => ({
                         x: timestamps[index],
                         y: value
@@ -175,10 +159,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         },
                         title: {
                             display: true,
-                            text: 'Date'
                         },
-                        min: (new Date()).setUTCDate(timestamps[timestamps.length - 1].getDate() - 2),
-                        max: new Date(maxTimeStamp)  // Will be set to show last 7 days
+                        min: (new Date()).setUTCDate(timestamps[timestamps.length - 1].getDate() - 1),
+                        max: new Date(maxTimeStamp)
                     },
                     y: {
                         title: {
@@ -188,6 +171,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 },
                 plugins: {
+										legend: {
+												display: false
+										},
+
                     zoom: {
 												limits: {
 														x: {min: Math.min( ...timestamps ), max: maxTimeStamp },
@@ -196,7 +183,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         pan: {
                             enabled: true,
                             mode: 'xy',
-                            modifierKey: null, // Allow pan without modifier key
+                            modifierKey: null,
                         },
                         zoom: {
                             wheel: {
