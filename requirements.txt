@@ -14,7 +14,9 @@ h11==0.16.0
 html5lib==1.1
 httpie==3.2.4
 idna==3.10
+Jinja2==3.1.6
 markdown-it-py==3.0.0
+MarkupSafe==3.0.2
 mdurl==0.1.2
 multidict==6.4.3
 pydantic==2.11.4
