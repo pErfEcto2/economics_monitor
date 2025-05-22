@@ -3,6 +3,8 @@
 
 ### TODO
 
+- add favicon.ico
+
 - get ssl certificate
 
 - get domain name
