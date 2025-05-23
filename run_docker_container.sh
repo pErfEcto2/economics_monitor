@@ -20,6 +20,6 @@ docker container rm site || true
 docker image rm economics_monitor || true
 
 docker build -t economics_monitor .
-docker run --name site -p 8080:8080 economics_monitor
+docker run --name site -p 8080:8080 -d economics_monitor
 
 
